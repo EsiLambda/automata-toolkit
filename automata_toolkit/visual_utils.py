@@ -21,6 +21,7 @@ def draw_nfa(nfa, title=""):
         title = title.replace('⁾', ')')
         title = title.replace('⁽', '(')
         title = title.replace('⁺', '+')
+        title = title.replace('﹩', '$')
         title = r'\n\nNFA : '+title
     g.attr(label=title, fontsize='30')
 
@@ -39,7 +40,7 @@ def draw_nfa(nfa, title=""):
     for state in nfa["states"]:
         for character in nfa["transition_function"][state]:
             for transition_state in nfa["transition_function"][state][character]:
-                if character not in [Consts.EPSILON, '╲', '⁕', 'ʔ', '⁾', '⁽', '⁺']:
+                if character not in [Consts.EPSILON, '╲', '⁕', 'ʔ', '⁾', '⁽', '⁺', '﹩']:
                     lbl = character
                 else:
                     lbl = replace_char(character)
@@ -69,6 +70,7 @@ def draw_dfa(dfa, title=""):
         title = title.replace('⁾', ')')
         title = title.replace('⁽', '(')
         title = title.replace('⁺', '+')
+        title = title.replace('﹩', '$')
         title = r'\n\nDFA : '+title
     g.attr(label=title, fontsize='30')
 
@@ -87,7 +89,7 @@ def draw_dfa(dfa, title=""):
     for state in dfa["reachable_states"]:
         for character in dfa["transition_function"][state].keys():
             transition_state = dfa["transition_function"][state][character]
-            if character not in ['╲', '⁕', 'ʔ', '⁾', '⁽', '⁺']:
+            if character not in ['╲', '⁕', 'ʔ', '⁾', '⁽', '⁺', '﹩']:
                 lbl = character
             else:
                 lbl = replace_char(character)
@@ -110,4 +112,6 @@ def replace_char(character):
         lbl = r'('
     elif character == '⁺':
         lbl = r'+'
+    elif character == '﹩':
+        lbl = r'$'
     return lbl
