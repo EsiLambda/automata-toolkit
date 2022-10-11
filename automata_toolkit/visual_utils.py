@@ -15,6 +15,12 @@ def draw_nfa(nfa, title=""):
     if title == "":
         title = r'\n\nNFA'
     else:
+        title = title.replace('╲', r'\\')
+        title = title.replace('⁕', '*')
+        title = title.replace('ʔ', '?')
+        title = title.replace('⁾', ')')
+        title = title.replace('⁽', '(')
+        title = title.replace('⁺', '+')
         title = r'\n\nNFA : '+title
     g.attr(label=title, fontsize='30')
 
@@ -33,9 +39,13 @@ def draw_nfa(nfa, title=""):
     for state in nfa["states"]:
         for character in nfa["transition_function"][state]:
             for transition_state in nfa["transition_function"][state][character]:
-                g.edge(state_name[state], state_name[transition_state], label= character if character != Consts.EPSILON else "\u03B5")
+                if character not in [Consts.EPSILON, '╲', '⁕', 'ʔ', '⁾', '⁽', '⁺']:
+                    lbl = character
+                else:
+                    lbl = replace_char(character)
+                g.edge(state_name[state], state_name[transition_state], label=lbl)
 
-    g.view(tempfile.mktemp('.gv'))  
+    g.view(tempfile.mktemp('.gv'))
 
 def draw_dfa(dfa, title=""):
     state_name = {}
@@ -53,6 +63,12 @@ def draw_dfa(dfa, title=""):
     if title == "":
         title = r'\n\nDFA'
     else:
+        title = title.replace('╲', r'\\')
+        title = title.replace('⁕', '*')
+        title = title.replace('ʔ', '?')
+        title = title.replace('⁾', ')')
+        title = title.replace('⁽', '(')
+        title = title.replace('⁺', '+')
         title = r'\n\nDFA : '+title
     g.attr(label=title, fontsize='30')
 
@@ -71,6 +87,27 @@ def draw_dfa(dfa, title=""):
     for state in dfa["reachable_states"]:
         for character in dfa["transition_function"][state].keys():
             transition_state = dfa["transition_function"][state][character]
-            g.edge(state_name[state], state_name[transition_state], label= character)
+            if character not in ['╲', '⁕', 'ʔ', '⁾', '⁽', '⁺']:
+                lbl = character
+            else:
+                lbl = replace_char(character)
+            g.edge(state_name[state], state_name[transition_state], label=lbl)
 
-    g.view(tempfile.mktemp('.gv'))  
+    g.view(tempfile.mktemp('.gv'))
+
+def replace_char(character):
+    if character == Consts.EPSILON:
+        lbl = "\u03B5"
+    elif character == '╲':
+        lbl = r'\\'
+    elif character == '⁕':
+        lbl = r'*'
+    elif character == 'ʔ':
+        lbl = r'?'
+    elif character == '⁾':
+        lbl = r')'
+    elif character == '⁽':
+        lbl = r'('
+    elif character == '⁺':
+        lbl = r'+'
+    return lbl
